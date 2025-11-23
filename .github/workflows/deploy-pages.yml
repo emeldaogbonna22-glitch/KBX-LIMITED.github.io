@@ -11,9 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Ensure deploy token exists
+        if: ${{ !secrets.DEPLOY_TOKEN }}
+        run: |
+          echo "ERROR: repository secret DEPLOY_TOKEN not found."
+          echo "Create a personal access token (repo scope) and add it as repo secret 'DEPLOY_TOKEN'"
+          exit 1
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           publish_dir: ./docs
           publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.DEPLOY_TOKEN }}
